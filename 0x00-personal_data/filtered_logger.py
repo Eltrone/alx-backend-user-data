@@ -5,7 +5,7 @@ Module to filter PII data fields from log records.
 
 import re
 
-def filter_datum(fields, redaction, message, separator):
+def filter_datum(fields: list, redaction: str, message: str, separator: str) -> str:
     """
     Obfuscate specific fields in a log message.
 
