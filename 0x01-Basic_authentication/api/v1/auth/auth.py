@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+"""
+Ce module définit la classe Auth utilisée pour gérer l'authentification dans l'API.
+"""
+
+
 # api/v1/auth/auth.py
 from flask import request
 from typing import List, TypeVar
