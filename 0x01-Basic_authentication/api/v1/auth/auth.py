@@ -41,7 +41,8 @@ class Auth:
 
         # Vérifie si le chemin actuel commence par un chemin exclu
         is_excluded = any(
-            path.startswith(excluded_path) for excluded_path in normalized_excluded_paths
+            path.startswith(excluded_path)
+            for excluded_path in normalized_excluded_paths
         )
         return not is_excluded
 
