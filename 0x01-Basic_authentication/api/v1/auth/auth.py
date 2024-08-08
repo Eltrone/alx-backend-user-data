@@ -17,25 +17,29 @@ class Auth:
     """
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """
-        Détermine si le chemin donné nécessite une authentification
-        en vérifiant s'il est dans la liste des chemins exclus.
-        Retourne True si le chemin n'est pas dans la liste des
-        chemins exclus ou si certaines conditions sont vraies
-        (voir ci-dessous).
-        """
-        if path is None:
-            return True
-        if not excluded_paths:
-            return True
-        # Normaliser le chemin pour la tolérance au slash
-        path = path.strip('/') + '/'
-        for pattern in excluded_paths:
-            if pattern.endswith('/'):
-                pattern = pattern.rstrip('/')
-            if path.startswith(pattern + '/') or path == pattern + '/':
-                return False
+    """
+    Détermine si le chemin donné nécessite une authentification en vérifiant 
+    s'il est dans la liste des chemins exclus.
+    
+    Retourne True si le chemin n'est pas dans la liste des chemins exclus ou si 
+    certaines conditions sont vraies (voir ci-dessous).
+    """
+    if path is None:
+        # Retourne True si aucun chemin n'est fourni
         return True
+    if not excluded_paths:
+        # Retourne True si la liste des chemins exclus est vide ou None
+        return True
+
+    # Normalise le chemin pour terminer par un slash pour la cohérence
+    path = path if path.endswith('/') else path + '/'
+
+    # Normalise les chemins exclus pour qu'ils se terminent tous par un slash
+    normalized_excluded_paths = [p if p.endswith(
+        '/') else p + '/' for p in excluded_paths]
+
+    # Vérifie si le chemin actuel commence par un chemin exclu
+    return not any(path.startswith(excluded_path) for excluded_path in normalized_excluded_paths)
 
     def authorization_header(self, request=None) -> str:
         """
