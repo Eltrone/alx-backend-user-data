@@ -25,7 +25,7 @@ class Auth:
         des chemins exclus ou si
         certaines conditions sont vraies (voir ci-dessous).
         """
-        if path is None: 
+        if path is None:
             return True
         if not excluded_paths:
             return True
