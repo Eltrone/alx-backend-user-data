@@ -7,7 +7,7 @@ pour gérer l'authentification dans l'API.
 from flask import request
 from typing import List, TypeVar
 
-User = TypeVar('User')  # Utilisé pour le type de retour de current_user
+User = TypeVar('User')
 
 
 class Auth:
@@ -25,21 +25,16 @@ class Auth:
         des chemins exclus ou si
         certaines conditions sont vraies (voir ci-dessous).
         """
-        if path is None:
-            # Retourne True si aucun chemin n'est fourni
+        if path is None: 
             return True
         if not excluded_paths:
-            # Retourne True si la liste des chemins exclus est vide ou None
             return True
 
-        # Normalise le chemin pour terminer par un slash pour la cohérence
         path = path if path.endswith('/') else path + '/'
 
-        # Normalise les chemins exclus qu'ils se terminent tous par slash
         normalized_excluded_paths = [p if p.endswith(
             '/') else p + '/' for p in excluded_paths]
 
-        # Vérifie si le chemin actuel commence par un chemin exclu
         is_excluded = any(
             path.startswith(excluded_path)
             for excluded_path in normalized_excluded_paths
