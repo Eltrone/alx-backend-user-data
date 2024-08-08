@@ -60,3 +60,11 @@ class Auth:
         Retourne None pour le moment.
         """
         return None
+
+    def authorization_header(self, request=None) -> str:
+        """
+        Récupère l'en-tête d'autorisation de la requête, si elle existe.
+        """
+        if request is None:
+            return None
+        return request.headers.get('Authorization', None)
