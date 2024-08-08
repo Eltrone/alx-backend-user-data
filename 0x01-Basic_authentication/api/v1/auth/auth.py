@@ -46,14 +46,6 @@ class Auth:
         )
         return not is_excluded
 
-    def authorization_header(self, request=None) -> str:
-        """
-        Récupère l'en-tête d'autorisation de la requête,
-        si elle existe.
-        Retourne None pour le moment.
-        """
-        return None
-
     def current_user(self, request=None) -> User:
         """
         Identifie l'utilisateur courant à partir de la requête.
