@@ -2,7 +2,6 @@
 """
 Initialise et gère une API Flask avec diverses méthodes d'authentification.
 """
-
 from os import getenv
 from flask import Flask, jsonify, abort, request
 from flask_cors import CORS
@@ -12,18 +11,19 @@ from api.v1.auth.basic_auth import BasicAuth
 from api.v1.auth.session_auth import SessionAuth
 from api.v1.auth.session_exp_auth import SessionExpAuth
 
+
 app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 auth = None
-if getenv("AUTH_TYPE") == "basic_auth":
+if os.getenv("AUTH_TYPE") == "basic_auth":
     auth = BasicAuth()
-elif getenv("AUTH_TYPE") == "auth":
+elif os.getenv("AUTH_TYPE") == "auth":
     auth = Auth()
-elif getenv("AUTH_TYPE") == "session_auth":
+elif os.getenv("AUTH_TYPE") == "session_auth":
     auth = SessionAuth()
-elif getenv("AUTH_TYPE") == "session_exp_auth":
+elif os.getenv("AUTH_TYPE") == "session_exp_auth":
     auth = SessionExpAuth()
 
 
