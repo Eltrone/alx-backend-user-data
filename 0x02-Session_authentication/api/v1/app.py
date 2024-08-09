@@ -30,6 +30,7 @@ elif auth_type == "auth":
 else:
     auth = None
 
+
 @app.before_request
 def before_request_func():
     """ Fonction exécutée avant chaque requête """
