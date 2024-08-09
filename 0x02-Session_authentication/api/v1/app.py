@@ -1,38 +1,34 @@
 #!/usr/bin/env python3
 """
-Module des routes pour l'API
+Route module for the API
 """
-
 from os import getenv
 from api.v1.views import app_views
 from flask import Flask, jsonify, abort, request
 from flask_cors import (CORS, cross_origin)
+import os
 from api.v1.auth.auth import Auth
 from api.v1.auth.basic_auth import BasicAuth
 from api.v1.auth.session_auth import SessionAuth
-from api.v1.auth.session_exp_auth import SessionExpAuth
+
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 
-auth_type = os.getenv("AUTH_TYPE")
-if auth_type == "session_exp_auth":
-    auth = SessionExpAuth()
-elif auth_type == "session_auth":
-    auth = SessionAuth()
-elif auth_type == "basic_auth":
+auth = None
+if os.getenv("AUTH_TYPE") == "basic_auth":
     auth = BasicAuth()
-elif auth_type == "auth":
+elif os.getenv("AUTH_TYPE") == "auth":
     auth = Auth()
-else:
-    auth = None
+elif os.getenv("AUTH_TYPE") == "session_auth":
+    auth = SessionAuth()
 
 
 @app.before_request
 def before_request_func():
-    """ Fonction exécutée avant chaque requête """
+    """before_request_func function"""
     if auth is None:
         return
     if not auth.require_auth(request.path, ['/api/v1/status/',
@@ -49,19 +45,20 @@ def before_request_func():
 
 @app.errorhandler(404)
 def not_found(error) -> str:
-    """ Gestionnaire pour les erreurs 404 """
+    """ Not found handler
+    """
     return jsonify({"error": "Not found"}), 404
 
 
 @app.errorhandler(401)
 def unauthorized(error) -> str:
-    """ Fonction pour les erreurs d'autorisation """
+    """unauthorized function"""
     return jsonify({"error": "Unauthorized"}), 401
 
 
 @app.errorhandler(403)
 def forbidden(error):
-    """ Fonction pour les erreurs d'accès interdit """
+    """forbidden function"""
     return jsonify({"error": "Forbidden"}), 403
 
 
