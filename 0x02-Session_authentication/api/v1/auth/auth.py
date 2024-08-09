@@ -1,57 +1,44 @@
 #!/usr/bin/env python3
-"""
-Ce module définit la classe Auth utilisée
-pour gérer l'authentification dans l'API.
-"""
-
-from flask import request
+"""gérer l'authentification de l'API"""
 from typing import List, TypeVar
+from flask import request
+from os import getenv
 
-User = TypeVar('User')
 
-
-class Auth:
-    """
-    Classe Auth pour gérer les mécanismes d'authentification
-    de base dans l'API.
-    """
+class Auth():
+    """Classe Auth"""
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """
-        Détermine si chemin donné nécessite une authentification en vérifiant
-        s'il est dans la liste des chemins exclus.
-
-        Retourne True si le chemin n'est pas dans la liste
-        des chemins exclus ou si
-        certaines conditions sont vraies (voir ci-dessous).
-        """
+        """Fonction require_auth"""
         if path is None:
             return True
-        if not excluded_paths:
+        elif excluded_paths is None or excluded_paths == []:
             return True
-
-        path = path if path.endswith('/') else path + '/'
-
-        normalized_excluded_paths = [p if p.endswith(
-            '/') else p + '/' for p in excluded_paths]
-
-        is_excluded = any(
-            path.startswith(excluded_path)
-            for excluded_path in normalized_excluded_paths
-        )
-        return not is_excluded
-
-    def current_user(self, request=None) -> User:
-        """
-        Identifie l'utilisateur courant à partir de la requête.
-        Retourne None pour le moment.
-        """
-        return None
+        elif path in excluded_paths:
+            return False
+        else:
+            for i in excluded_paths:
+                if i.startswith(path):
+                    return False
+                if path.startswith(i):
+                    return False
+                if i[-1] == "*":
+                    if path.startswith(i[:-1]):
+                        return False
+        return True
 
     def authorization_header(self, request=None) -> str:
-        """
-        Récupère l'en-tête d'autorisation de la requête, si elle existe.
-        """
+        """Fonction authorization_header"""
         if request is None:
             return None
-        return request.headers.get('Authorization', None)
+        return request.headers.get("Authorization", None)
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """Fonction current_user"""
+        return None
+
+    def session_cookie(self, request=None):
+        """Fonction session_cookie"""
+        if request:
+            session_name = getenv("SESSION_NAME")
+            return request.cookies.get(session_name, None)
