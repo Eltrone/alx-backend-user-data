@@ -24,7 +24,7 @@ elif os.getenv("AUTH_TYPE") == "auth":
     auth = Auth()
 elif os.getenv("AUTH_TYPE") == "session_auth":
     auth = SessionAuth()
-elif auth_type == "session_exp_auth":
+elif os.getenv("AUTH_TYPE") == "session_exp_auth":
     auth = SessionExpAuth()
 
 @app.before_request
