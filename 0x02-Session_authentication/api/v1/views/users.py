@@ -1,18 +1,15 @@
 #!/usr/bin/env python3
-# Module de gestion des utilisateurs
+""" Module de gestion des utilisateurs """
+
 from api.v1.views import app_views
 from flask import abort, jsonify, request
 from models.user import User
-
-# Afficher tous les utilisateurs
 
 
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
 def get_users() -> str:
     users = [user.to_json() for user in User.all()]
     return jsonify(users)
-
-# Afficher un utilisateur spécifique
 
 
 @app_views.route('/users/<user_id>', methods=['GET'], strict_slashes=False)
@@ -21,8 +18,6 @@ def get_user(user_id: str = None) -> str:
         abort(404)
     user = User.get(user_id) or abort(404)
     return jsonify(user.to_json())
-
-# Supprimer un utilisateur
 
 
 @app_views.route('/users/<user_id>', methods=['DELETE'], strict_slashes=False)
