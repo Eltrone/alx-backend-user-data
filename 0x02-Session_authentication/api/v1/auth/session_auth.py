@@ -29,4 +29,5 @@ class SessionAuth(Auth):
         """Récupère l'utilisateur actuel à partir de la session courante."""
         session_cookie = self.session_cookie(request)
         user_id = self.user_id_for_session_id(session_cookie)
-        return User.get(user_id)
+        user = User.get(user_id)
+        return user
