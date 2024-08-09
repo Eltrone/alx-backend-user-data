@@ -2,6 +2,7 @@
 """Initialise les vues de l'API avec Blueprint pour les routes '/api/v1'."""
 
 from flask import Blueprint
+from api.v1.views.session_auth import *
 
 # Blueprint pour les vues de l'API, préfixé par '/api/v1'.
 app_views = Blueprint("app_views", __name__, url_prefix="/api/v1")
