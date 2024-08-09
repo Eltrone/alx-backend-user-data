@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Route module for the API
+Module des routes pour l'API
 """
 from os import getenv
 from api.v1.views import app_views
@@ -10,7 +10,7 @@ import os
 from api.v1.auth.auth import Auth
 from api.v1.auth.basic_auth import BasicAuth
 from api.v1.auth.session_auth import SessionAuth
-
+from api.v1.auth.session_exp_auth import SessionExpAuth
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
@@ -24,11 +24,12 @@ elif os.getenv("AUTH_TYPE") == "auth":
     auth = Auth()
 elif os.getenv("AUTH_TYPE") == "session_auth":
     auth = SessionAuth()
-
+elif auth_type == "session_exp_auth":
+    auth = SessionExpAuth()
 
 @app.before_request
 def before_request_func():
-    """before_request_func function"""
+    """ before_request_func function avant requete """
     if auth is None:
         return
     if not auth.require_auth(request.path, ['/api/v1/status/',
@@ -45,20 +46,19 @@ def before_request_func():
 
 @app.errorhandler(404)
 def not_found(error) -> str:
-    """ Not found handler
-    """
+    """ Gestionnaire erreurs """
     return jsonify({"error": "Not found"}), 404
 
 
 @app.errorhandler(401)
 def unauthorized(error) -> str:
-    """unauthorized function"""
+    """ Fonctions erreurs autorisation """
     return jsonify({"error": "Unauthorized"}), 401
 
 
 @app.errorhandler(403)
 def forbidden(error):
-    """forbidden function"""
+    """ Fonctions accès interdit """
     return jsonify({"error": "Forbidden"}), 403
 
 
