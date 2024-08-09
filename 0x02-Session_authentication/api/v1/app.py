@@ -46,19 +46,19 @@ def before_request_func():
 @app.errorhandler(404)
 def not_found(error) -> str:
     """ Gestionnaire pour les erreurs 404 """
-    return jsonify({"error": "Non trouvé"}), 404
+    return jsonify({"error": "Not found"}), 404
 
 
 @app.errorhandler(401)
 def unauthorized(error) -> str:
     """ Fonction pour les erreurs d'autorisation """
-    return jsonify({"error": "Non autorisé"}), 401
+    return jsonify({"error": "Unauthorized"}), 401
 
 
 @app.errorhandler(403)
 def forbidden(error):
     """ Fonction pour les erreurs d'accès interdit """
-    return jsonify({"error": "Interdit"}), 403
+    return jsonify({"error": "Forbidden"}), 403
 
 
 if __name__ == "__main__":
