@@ -14,7 +14,7 @@ def login():
     if not user_email:
         return jsonify(error="email missing"), 400
     if not user_pwd:
-        return jsonify(error="passwword missing"), 400
+        return jsonify(error="password missing"), 400
     try:
         user = User.search({"email": user_email})
     except Exception:
