@@ -47,8 +47,10 @@ class DB:
 
     def update_user(self, user_id: int, **kwargs):
         """Update user's attributes as specified by keyword arguments."""
-        user = self.find_user_by(id=user_id)
-        if not user:
+        try:
+            user = self.find_user_by(id=user_id)
+        except NoResultFound:
+            # Transformer l'exception pour une cohérence d'interface.
             raise ValueError("User not found.")
 
         for key, value in kwargs.items():
