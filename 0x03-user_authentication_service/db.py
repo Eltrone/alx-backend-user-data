@@ -7,6 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from user import Base, User  # Assurez-vous d'importer User
+from sqlalchemy.exc import InvalidRequestError, NoResultFound
 
 
 class DB:
@@ -33,3 +34,28 @@ class DB:
         self._session.add(new_user)
         self._session.commit()
         return new_user
+
+    def find_user_by(self, **kwargs) -> User:
+        """Find a user by arbitrary keyword arguments."""
+        try:
+            result = self._session.query(User).filter_by(**kwargs).first()
+            if result is None:
+                raise NoResultFound("No user found with the given attributes.")
+            return result
+        except InvalidRequestError:
+            raise InvalidRequestError("Invalid query attributes.")
+
+    def update_user(self, user_id: int, **kwargs):
+        """Update user's attributes as specified by keyword arguments."""
+        user = self.find_user_by(id=user_id)
+        if not user:
+            raise ValueError("User not found.")
+
+        for key, value in kwargs.items():
+            if hasattr(user, key):
+                setattr(user, key, value)
+            else:
+                raise ValueError(
+                    f"{key} is not a valid attribute of the user.")
+
+        self._session.commit()
