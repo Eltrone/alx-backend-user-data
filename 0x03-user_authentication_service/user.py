@@ -1,28 +1,21 @@
 #!/usr/bin/env python3
 """
-Script principal pour tester la définition du modèle User.
+définit modèle User utilisé pour interagir table 'users' dans base de données.
 """
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from user import Base, User
 
-# Configuration de la base de données (remplacer par votre chaîne de connexion)
-# Utilisation d'une base de données en mémoire pour le test
-engine = create_engine('sqlite:///:memory:')
-Base.metadata.create_all(engine)
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
 
-Session = sessionmaker(bind=engine)
-session = Session()
+Base = declarative_base()
 
-# Exemple d'ajout d'un utilisateur
-new_user = User(email='test@example.com', hashed_password='hashed_password')
-session.add(new_user)
-session.commit()
 
-# Affichage des informations sur les colonnes
-print(User.__tablename__)
-for column in User.__table__.columns:
-    print(f"{column}: {column.type}")
+class User(Base):
+    """Représente un utilisateur dans la base de données."""
 
-# Fermeture de la session
-session.close()
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True)
+    email = Column(String(250), nullable=False)
+    hashed_password = Column(String(250), nullable=False)
+    session_id = Column(String(250), nullable=True)
+    reset_token = Column(String(250), nullable=True)
